@@ -2,7 +2,7 @@ from tkinter import *
 
 window = Tk()
 
-canvas = Canvas(window, width=600, height=600)
+canvas = Canvas(window, width=600, height=650)
 canvas.grid(columnspan=3, rowspan=3)
 
 # label
@@ -63,6 +63,23 @@ scale5.place(x=420, y=490)
 # label
 label5 = Label(window, text="Programación Móvil: ", font="Arial")
 label5.place(x=180, y=490)
+
+buttonText = StringVar()
+submit = Button(window, textvariable=buttonText, font="Raleway",
+                bg='#20bebe', fg="white", width=15, height=1, command=lambda: submit())
+buttonText.set("Enviar Resultados")
+
+submit.grid(column=1, row=2)
+submit.place(x=250, y=570)
+
+
+def submit():
+    print(scale.get())
+    print(scale1.get())
+    print(scale2.get())
+    print(scale3.get())
+    print(scale4.get())
+    print(scale5.get())
 
 
 window.mainloop()
