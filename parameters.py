@@ -1,13 +1,9 @@
 from tkinter import *
+import numpy
+import results
 
 
-def callParametersPage():
-    root = Tk()
-    main(root)
-    root.mainloop()
-
-
-def main(root):
+def main(root, puntos):
 
     canvas = Canvas(root, width=600, height=650)
     canvas.grid(columnspan=3, rowspan=3)
@@ -79,10 +75,34 @@ def main(root):
     submit.grid(column=1, row=2)
     submit.place(x=250, y=570)
 
+    parametros = []
+
     def submit():
-        print(scale.get())
-        print(scale1.get())
-        print(scale2.get())
-        print(scale3.get())
-        print(scale4.get())
-        print(scale5.get())
+
+        # print(scale.get())
+        parametros.append(scale.get())
+        # print(scale1.get())
+        parametros.append(scale1.get())
+        # print(scale2.get())
+        parametros.append(scale2.get())
+        # print(scale3.get())
+        parametros.append(scale3.get())
+        # print(scale4.get())
+        parametros.append(scale4.get())
+        # print(scale5.get())
+        parametros.append(scale5.get())
+        # print(parametros)
+        resultadosfacheritos = numpy.multiply(puntos, parametros)
+        print(resultadosfacheritos)
+        finalCall(root, resultadosfacheritos)
+
+
+def finalCall(root, resultadosfacheritos):
+    root.destroy()
+    results.callResultPage(resultadosfacheritos)
+
+
+def callParametersPage(puntos):
+    root = Tk()
+    main(root, puntos)
+    root.mainloop()

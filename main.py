@@ -1,9 +1,10 @@
 from tkinter import *
-from tkinter.filedialog import askopenfiles
+from tkinter.filedialog import askopenfile
 import pdfminer.high_level as miner
 from PIL import Image, ImageTk
 import string
 import glob
+import parameters
 
 
 def call():
@@ -52,21 +53,19 @@ def main(root):
     canvas.grid(columnspan=3)
 
 
-# def nextPage(root, puntos):
-#     root.destroy()
-#     parameters.callParametersPage(puntos)
+def nextPage(root, puntos):
+    root.destroy()
+    parameters.callParametersPage(puntos)
 
 # funcion del boton
 
 
 def open_pdf(buttonText, root):
     buttonText.set("Cargando...")
-    file = []
-    file = askopenfiles(parent=root, mode='rb', title="Elige un archivo PDF", filetypes=[
+    file = askopenfile(parent=root, mode='rb', title="Elige un archivo PDF", filetypes=[
                        ("Pdf file", "*.pdf")])
-    if file[2]:
-        content = miner.extract_text(file[2])
-        print('tu tercer file: ' + content)
+    if file:
+        content = miner.extract_text(file)
         # caja de texto
 
         textBox = Text(root, height=10, width=50, padx=15, pady=15)
@@ -89,12 +88,12 @@ def open_pdf(buttonText, root):
 
         puntos = puntuacion(text)
 
-        # # boton nextPage
-        # nextText = StringVar()
-        # next = Button(root, textvariable=nextText,
-        #               command=lambda: nextPage(root, puntos), font='Raleway', bg='#20bebe', fg="white", width=15, height=2)
-        # nextText.set('Definir Parámetros')
-        # next.place(x=230, y=600)
+        # boton nextPage
+        nextText = StringVar()
+        next = Button(root, textvariable=nextText,
+                      command=lambda: nextPage(root, puntos), font='Raleway', bg='#20bebe', fg="white", width=15, height=2)
+        nextText.set('Definir Parámetros')
+        next.place(x=230, y=600)
 
         return
 

@@ -5,15 +5,15 @@ from PIL import Image, ImageTk
 import pdfminer.high_level as miner
 import string
 import pandas as pd
-from pandastable import Table, TableModel
+
 
 root = tk.Tk()
 content = ''
 summary = pd.DataFrame()
 
 terms = {'Habilidades Generales': ['ingles', 'frances', 'aleman', 'orden', 'ordenes', 'obediente', 'liderazgo', 'lider', 'puntual', 'responsable', 'cooperativo', 'cooperacion', 'creativo', 'creatividad', 'proactivo', 'proactividad', 'excelencia', 'perfeccionista', 'perfeccion', 'aprendizaje', 'aprender', 'actitud', 'aptitud', 'aptitudes', 'eficiente', 'eficiencia', 'competencia', 'competencias', 'competente', 'eficaz', 'linux', 'mac', 'macos', 'windows', 'powershell', 'terminal'],
-         'Programacion Web': ['javascript', 'java', 'python', 'flask', 'html', 'angular', 'angularjs', 'vue', 'vuejs', 'react', 'reactjs', 'css', 'objective c', 'perl', 'php', 'typescript', 'element', 'ruby', 'ruby on rails', 'yii', 'meteor', 'meteorjs', 'django', 'laravel', 'go', 'elixir', 'http', 'https''node', 'nodejs', 'express', 'backbonejs', 'scss', 'lcss'],
-         'Database': ['mongo', 'mongodb', 'postgre', 'postgresql', 'mysql', 'mariadb', 'cockroachdb', 'clickhouse', 'neo4j', 'rethinkdb', 'redis', 'sqlite', 'cassandra', 'couchdb', 'firebird', 'firebase', 'cubrid'],
+         'Programacion Web': ['javascript', 'java', 'python', 'flask', 'html', 'angular', 'angular', 'vue', 'vue', 'react', 'react', 'css', 'objective c', 'perl', 'php', 'typescript', 'element', 'ruby', 'ruby on rails', 'yii', 'meteor', 'meteorjs', 'django', 'laravel', 'go', 'elixir', 'http', 'https''node', 'nodejs', 'express', 'backbonejs', 'scss', 'lcss'],
+         'Database': ['mongo', 'mongodb', 'postgre', 'postgre', 'mysql', 'mariadb', 'cockroachdb', 'clickhouse', 'neo4j', 'rethinkdb', 'redis', 'sqlite', 'cassandra', 'couchdb', 'firebird', 'firebase', 'cubrid'],
          'Programacion': ['c++', 'c', 'c#', 'python', 'java', 'kotlin', 'go', 'golang', 'assembly', 'swift', 'rust', 'ruby'],
          'Data Science': ['panda', 'big data', 'data mining', 'clustering', 'nlp', 'machine learning', 'data science', 'deep learning', 'modelado', 'modeling', 'nlp', 'pln'],
          'Programacion Movil': ['react native', 'flutter', 'ionic', 'swift', 'kotlin', 'java']
@@ -21,6 +21,7 @@ terms = {'Habilidades Generales': ['ingles', 'frances', 'aleman', 'orden', 'orde
 
 canvas = Canvas(root, width=600, height=300)
 canvas.grid(columnspan=3, rowspan=3)
+
 
 # logo
 logo = Image.open('logo.png')
@@ -148,20 +149,6 @@ def puntuacion(t):
                 scores.append(movil)
     summary = pd.DataFrame(scores, index=terms.keys(), columns=[
                            'score']).sort_values(by='score', ascending=False)
-
-    class DataFrameTable(tk.Frame):
-        def __init__(self, parent=None, summary=pd.DataFrame()):
-            super().__init__()
-            self.parent = parent
-            self.grid(column=3, row=2)
-            self.table = Table(
-                self, dataframe=summary,
-                showtoolbar=False,
-                showstatusbar=True,
-                editable=False)
-            self.table.show()
-
-    DataFrameTable(root, summary)
 
 
 root.mainloop()
