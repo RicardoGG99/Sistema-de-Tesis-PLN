@@ -5,6 +5,179 @@ from PIL import Image, ImageTk
 import string
 import glob
 import parameters
+import spacy
+from spacy.matcher import Matcher
+
+nlp = spacy.load("es_core_news_sm")
+matcher = Matcher(nlp.vocab)
+
+skills = [
+    [{"TEXT": "ingles"}], 
+    [{"TEXT": "frances"}], 
+    [{"TEXT": "aleman"}],
+    [{"TEXT": "orden"}], 
+    [{"TEXT": "ordenes"}],
+    [{"TEXT": "logico"}], 
+    [{"TEXT": "logica"}], 
+    [{"TEXT": "obediente"}], 
+    [{"TEXT": "liderazgo"}], 
+    [{"TEXT": "lider"}], 
+    [{"TEXT": "analista"}], 
+    [{"TEXT": "puntual"}], 
+    [{"TEXT": "creativo"}], 
+    [{"TEXT": "proactivo"}],
+    [{"TEXT": "excelencia"}],
+    [{"TEXT": "creativa"}], 
+    [{"TEXT": "proactiva"}],
+    [{"TEXT": "creatividad"}], 
+    [{"TEXT": "proactividad"}],  
+    [{"TEXT": "perfeccionista"}], 
+    [{"TEXT": "perfeccion"}], 
+    [{"TEXT": "aprendizaje"}], 
+    [{"TEXT": "aprender"}], 
+    [{"TEXT": "actitud"}], 
+    [{"TEXT": "aptitud"}], 
+    [{"TEXT": "eficiente"}], 
+    [{"TEXT": "eficiencia"}], 
+    [{"TEXT": "competencia"}], 
+    [{"TEXT": "competencias"}], 
+    [{"TEXT": "competente"}], 
+    [{"TEXT": "eficaz"}], 
+    [{"TEXT": "linux"}], 
+    [{"TEXT": "mac"}], 
+    [{"TEXT": "macos"}], 
+    [{"TEXT": "windows"}], 
+    [{"TEXT": "powershell"}], 
+    [{"TEXT": "terminal"}]
+    ]
+
+ProgWeb = [
+    [{"TEXT": "javascript"}], 
+    [{"TEXT": "java"}], 
+    [{"TEXT": "python"}], 
+    [{"TEXT": "flask"}], 
+    [{"TEXT": "html"}], 
+    [{"TEXT": "angular"}], 
+    [{"TEXT": "angularjs"}], 
+    [{"TEXT": "vue"}], 
+    [{"TEXT": "vuejs"}], 
+    [{"TEXT": "react"}], 
+    [{"TEXT": "reactjs"}], 
+    [{"TEXT": "css"}], 
+    [{"TEXT": "objective c"}], 
+    [{"TEXT": "perl"}], 
+    [{"TEXT": "php"}], 
+    [{"TEXT": "typescript"}], 
+    [{"TEXT": "element"}], 
+    [{"TEXT": "ruby"}], 
+    [{"TEXT": "ruby"}, {"TEXT": "on"}, {"TEXT": "rails"}], 
+    [{"TEXT": "yii"}], 
+    [{"TEXT": "meteor"}], 
+    [{"TEXT": "meteorjs"}], 
+    [{"TEXT": "django"}], 
+    [{"TEXT": "laravel"}], 
+    [{"TEXT": "go"}], 
+    [{"TEXT": "elixir"}], 
+    [{"TEXT": "http"}], 
+    [{"TEXT": "https"}], 
+    [{"TEXT": "node"}], 
+    [{"TEXT": "nodejs"}], 
+    [{"TEXT": "express"}], 
+    [{"TEXT": "backbonejs"}], 
+    [{"TEXT": "scss"}], 
+    [{"TEXT": "lcss"}]
+    ]
+
+BaseDeDatos = [
+    [{"TEXT": "mongo"}], 
+    [{"TEXT": "database"}], 
+    [{"TEXT": "base"}, {"TEXT": "de"}, {"TEXT": "datos"}],
+    [{"TEXT": "bases"}, {"TEXT": "de"}, {"TEXT": "datos"}], 
+    [{"TEXT": "dbms"}], 
+    [{"TEXT": "data"}, {"TEXT": "base"}], 
+    [{"TEXT": "mongodb"}], 
+    [{"TEXT": "postgre"}], 
+    [{"TEXT": "postgresql"}], 
+    [{"TEXT": "mysql"}], 
+    [{"TEXT": "mariadb"}], 
+    [{"TEXT": "cockroachdb"}], 
+    [{"TEXT": "clickhouse"}], 
+    [{"TEXT": "neo4j"}], 
+    [{"TEXT": "rethinkdb"}], 
+    [{"TEXT": "redis"}], 
+    [{"TEXT": "sqlite"}], 
+    [{"TEXT": "cassandra"}], 
+    [{"TEXT": "couchdb"}], 
+    [{"TEXT": "firebird"}], 
+    [{"TEXT": "firebase"}], 
+    [{"TEXT": "cubrid"}],
+    [{"TEXT": "sql"}]
+    ]
+
+ProgramacionRegular = [ 
+    [{"TEXT": "c++"}], 
+    [{"TEXT": "c#"}], 
+    [{"TEXT": "kotlin"}], 
+    [{"TEXT": "go"}], 
+    [{"TEXT": "golang"}],
+    [{"TEXT": "assembly"}], 
+    [{"TEXT": "assembler"}], 
+    [{"TEXT": "ensamblador"}], 
+    [{"TEXT": "swift"}], 
+    [{"TEXT": "rust"}], 
+    [{"TEXT": "ruby"}], 
+    ]
+
+DataScience = [
+    [{"TEXT": "panda"}], 
+    [{"TEXT": "big"}, {"TEXT": "data"}], 
+    [{"TEXT": "data"}, {"TEXT": "mining"}], 
+    [{"TEXT": "clustering"}], 
+    [{"TEXT": "machine"}, {"TEXT": "learning"}], 
+    [{"TEXT": "data"}, {"TEXT": "science"}], 
+    [{"TEXT": "deep"}, {"TEXT": "learning"}], 
+    [{"TEXT": "modelado"}], 
+    [{"TEXT": "modeling"}], 
+    [{"TEXT": "nlp"}], 
+    [{"TEXT": "pln"}], 
+    [{"TEXT": "procesamiento"}, {"TEXT": "de"}, {"TEXT": "lenguaje"}, {"TEXT": "natural"}], 
+    [{"TEXT": "natural"}, {"TEXT": "language"}, {"TEXT": "processing"}], 
+    [{"TEXT": "inteligencia"}, {"TEXT": "artificial"}], 
+    [{"TEXT": "ia"}], 
+    [{"TEXT": "ai"}], 
+    ]
+
+MobileProg = [
+    [{"TEXT": "react"}, {"TEXT": "native"}], 
+    [{"TEXT": "flutter"}], 
+    [{"TEXT": "ionic"}], 
+    [{"TEXT": "swift"}], 
+    [{"TEXT": "kotlin"}], 
+    [{"TEXT": "java"}]
+]
+
+matcher.add("HAB", skills)
+matcher.add("WEB", ProgWeb)
+matcher.add("BDD", BaseDeDatos)
+matcher.add("PROG", ProgramacionRegular)
+matcher.add("DATA", DataScience)
+matcher.add("MOB", MobileProg)
+
+
+
+def espeici(contento):
+    matchesitos = []
+    #print(contento)
+    doc = nlp(contento)
+    #print(doc)
+    matches = matcher(doc)
+    for match_id, start, end in matches:
+        string_id = nlp.vocab.strings[match_id]  # Get string representation
+        span = doc[start:end]  # The matched span
+        print(string_id, span.text)
+        matchesitos.append(span.text)
+    #print(matchesitos)
+
 
 
 def call():
@@ -82,10 +255,11 @@ def open_pdf(buttonText, root):
 
         content = normalize(content)
 
-        print(terms.keys())
+        #print(terms.keys())
 
         text = content
 
+        ayuda = espeici(content)
         puntos = puntuacion(text)
 
         # boton nextPage
@@ -121,42 +295,42 @@ def puntuacion(t):
     movil = 0
 
     scores = []
-    print(t)
+    #print(t)
     for area in terms.keys():
 
         if area == 'Habilidades Generales':
             for word in terms[area]:
                 if word in t:
                     habilidades += 1
-                    print(word)
+                    #print(word)
             scores.append(habilidades)
 
         elif area == 'Programacion Web':
             for word in terms[area]:
                 if word in t:
                     web += 1
-                    print(word)
+                    #print(word)
             scores.append(web)
 
         elif area == 'Database':
             for word in terms[area]:
                 if word in t:
                     database += 1
-                    print(word)
+                    #print(word)
             scores.append(database)
 
         elif area == 'Programacion':
             for word in terms[area]:
                 if word in t:
                     programacion += 1
-                    print(word)
+                    #print(word)
             scores.append(programacion)
 
         elif area == 'Data Science':
             for word in terms[area]:
                 if word in t:
                     datascience += 1
-                    print(word)
+                    #print(word)
             scores.append(datascience)
 
         else:
@@ -164,7 +338,7 @@ def puntuacion(t):
                 for word in terms[area]:
                     if word in t:
                         movil += 1
-                        print(word)
+                        #print(word)
                 scores.append(movil)
 
     return scores
