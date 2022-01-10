@@ -61,12 +61,12 @@ def main(root):
 
 def open_pdf(buttonText, root):
     buttonText.set("Cargando...")
-    file = []
-    file = askopenfiles(parent=root, mode='rb', title="Elige un archivo PDF", filetypes=[
-                       ("Pdf file", "*.pdf")])
-    if file[2]:
-        content = miner.extract_text(file[2])
-        print('tu tercer file: ' + content)
+    files = []
+    files = askopenfiles(parent=root, mode='rb', title="Elige Varios Currículums", filetypes=[
+        ("Pdf file", "*.pdf")])
+    if files[0]:
+        content = miner.extract_text(files[0])
+        # print('tu tercer file: ' + content)
         # caja de texto
 
         textBox = Text(root, height=10, width=50, padx=15, pady=15)
