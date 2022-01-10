@@ -53,7 +53,7 @@ skills = [
 ]
 
 ProgWeb = [
-    [{"TEXT": "javascript"}],
+    [{"TEXT": "javascript"}, ],
     [{"TEXT": "java"}],
     [{"TEXT": "python"}],
     [{"TEXT": "flask"}],
@@ -175,8 +175,53 @@ def espeici(contento):
     for match_id, start, end in matches:
         string_id = nlp.vocab.strings[match_id]  # Get string representation
         span = doc[start:end]  # The matched span
-        print(string_id, span.text)
+        # print(string_id, span.text)
         matchesitos.append(span.text)
+
+    habilidades = 0
+    web = 0
+    database = 0
+    programacion = 0
+    datascience = 0
+    movil = 0
+
+    scores = []
+
+    if string_id == 'HAB':
+        habilidades += 1
+        # print(word)
+        scores.append(habilidades)
+
+    elif string_id == 'WEB':
+        web += 1
+        # print(word)
+        scores.append(web)
+
+    elif string_id == 'BDD':
+        database += 1
+        # print(word)
+        scores.append(database)
+
+    elif string_id == 'PROG':
+        programacion += 1
+        # print(word)
+        scores.append(programacion)
+
+    elif string_id == 'DATA':
+        datascience += 1
+        # print(word)
+        scores.append(datascience)
+
+    else:
+        if string_id == 'MOB':
+            movil += 1
+            # print(word)
+            scores.append(movil)
+
+    # print("puntos")
+
+    # return scores
+
     # print(matchesitos)
 
 
@@ -188,13 +233,13 @@ def call():
 
 content = ''
 
-terms = {'Habilidades Generales': ['ingles', 'frances', 'aleman', 'orden', 'ordenes', 'logico', 'logica', 'obediente', 'liderazgo', 'lider', 'analitic', 'puntual', 'responsable', 'cooperativo', 'cooperacion', 'creativ', 'creatividad', 'proactiv', 'proactividad', 'excelencia', 'perfeccionista', 'perfeccion', 'aprendizaje', 'aprender', 'actitud', 'aptitud', 'eficiente', 'eficiencia', 'competencia', 'competencias', 'competente', 'eficaz', 'linux', 'mac ', 'macos', 'windows', 'powershell', 'terminal'],
-         'Programacion Web': ['javascript', 'java', 'python', 'flask', 'html', 'angular', 'angularjs', 'vue ', 'vuejs', 'react', 'reactjs', 'css', 'objective c', 'perl', 'php', 'typescript', 'element', 'ruby', 'ruby on rails', 'yii', 'meteor', 'meteorjs', 'django', 'laravel', ' go ', 'elixir', 'http', 'https''node', 'nodejs', 'express', 'backbonejs', 'scss', 'lcss'],
-         'Database': ['mongo', 'database', 'base de datos', 'DBMS', 'data base' 'mongodb', 'postgre', 'postgresql', 'mysql', 'mariadb', 'cockroachdb', 'clickhouse', 'neo4j', 'rethinkdb', 'redis', 'sqlite', 'cassandra', 'couchdb', 'firebird', 'firebase', 'cubrid', 'sql'],
-         'Programacion': ['c++', 'c ', 'c#', 'python', 'java', 'kotlin', ' go ', 'golang', 'assembly', 'assembler', 'ensamblador', 'swift', 'rust', 'ruby'],
-         'Data Science': ['panda', 'big data', 'data mining', 'clustering', 'machine learning', 'data science', 'deep learning', 'modelado', 'modeling', 'nlp', 'pln', 'inteligencia artificial', ' ia ', ' ai '],
-         'Programacion Movil': ['react native', 'flutter', 'ionic', 'swift', 'kotlin', 'java']
-         }
+# terms = {'Habilidades Generales': ['ingles', 'frances', 'aleman', 'orden', 'ordenes', 'logico', 'logica', 'obediente', 'liderazgo', 'lider', 'analitic', 'puntual', 'responsable', 'cooperativo', 'cooperacion', 'creativ', 'creatividad', 'proactiv', 'proactividad', 'excelencia', 'perfeccionista', 'perfeccion', 'aprendizaje', 'aprender', 'actitud', 'aptitud', 'eficiente', 'eficiencia', 'competencia', 'competencias', 'competente', 'eficaz', 'linux', 'mac ', 'macos', 'windows', 'powershell', 'terminal'],
+#          'Programacion Web': ['javascript', 'java', 'python', 'flask', 'html', 'angular', 'angularjs', 'vue ', 'vuejs', 'react', 'reactjs', 'css', 'objective c', 'perl', 'php', 'typescript', 'element', 'ruby', 'ruby on rails', 'yii', 'meteor', 'meteorjs', 'django', 'laravel', ' go ', 'elixir', 'http', 'https''node', 'nodejs', 'express', 'backbonejs', 'scss', 'lcss'],
+#          'Database': ['mongo', 'database', 'base de datos', 'DBMS', 'data base' 'mongodb', 'postgre', 'postgresql', 'mysql', 'mariadb', 'cockroachdb', 'clickhouse', 'neo4j', 'rethinkdb', 'redis', 'sqlite', 'cassandra', 'couchdb', 'firebird', 'firebase', 'cubrid', 'sql'],
+#          'Programacion': ['c++', 'c ', 'c#', 'python', 'java', 'kotlin', ' go ', 'golang', 'assembly', 'assembler', 'ensamblador', 'swift', 'rust', 'ruby'],
+#          'Data Science': ['panda', 'big data', 'data mining', 'clustering', 'machine learning', 'data science', 'deep learning', 'modelado', 'modeling', 'nlp', 'pln', 'inteligencia artificial', ' ia ', ' ai '],
+#          'Programacion Movil': ['react native', 'flutter', 'ionic', 'swift', 'kotlin', 'java']
+#          }
 
 
 def main(root):
@@ -239,32 +284,31 @@ def open_pdf(buttonText, root):
         ("Pdf file", "*.pdf")])
 
     if files:
-        content = miner.extract_text(files[0])
-        # caja de texto
 
+        for file in files:
+
+            content = miner.extract_text(file)
+            # caja de texto
+            content = content.lower()
+            content = content.translate(
+                str.maketrans('', '', string.punctuation))
+            content = normalize(content)
+            # print(terms.keys())
+            text = content
+            espeici(content)
+            # puntos = puntuacion(text)
+            # print(puntos)
+            print("Fin PDF")
         win32api.MessageBox(0, 'CV Cargado(s) Exitosamente',
                             'Éxito', 0x00001000, )
 
         buttonText.set("Navega por un PDF")
 
-        content = content.lower()
-
-        content = content.translate(str.maketrans('', '', string.punctuation))
-
-        content = normalize(content)
-
-        # print(terms.keys())
-
-        text = content
-
-        espeici(content)
-        puntos = puntuacion(text)
-
         # boton nextPage
         nextText = StringVar()
         next = Button(root, textvariable=nextText,
                       command=lambda: nextPage(root, puntos), font='Raleway', bg='#20bebe', fg="white", width=15, height=2)
-        nextText.set('Definir Parámetros')
+        nextText.set('Siguiente')
         next.place(x=230, y=600)
 
         return
@@ -283,63 +327,63 @@ def normalize(s):
     return s
 
 
-def puntuacion(t):
+# def puntuacion(t):
 
-    habilidades = 0
-    web = 0
-    database = 0
-    programacion = 0
-    datascience = 0
-    movil = 0
+    # habilidades = 0
+    # web = 0
+    # database = 0
+    # programacion = 0
+    # datascience = 0
+    # movil = 0
 
-    scores = []
-    # print(t)
-    for area in terms.keys():
+    # scores = []
+    # # print(t)
+    #
 
-        if area == 'Habilidades Generales':
-            for word in terms[area]:
-                if word in t:
-                    habilidades += 1
-                    # print(word)
-            scores.append(habilidades)
+    #     if area == 'Habilidades Generales':
+    #         for word in terms[area]:
+    #             if word in t:
+    #                 habilidades += 1
+    #                 # print(word)
+    #         scores.append(habilidades)
 
-        elif area == 'Programacion Web':
-            for word in terms[area]:
-                if word in t:
-                    web += 1
-                    # print(word)
-            scores.append(web)
+    #     elif area == 'Programacion Web':
+    #         for word in terms[area]:
+    #             if word in t:
+    #                 web += 1
+    #                 # print(word)
+    #         scores.append(web)
 
-        elif area == 'Database':
-            for word in terms[area]:
-                if word in t:
-                    database += 1
-                    # print(word)
-            scores.append(database)
+    #     elif area == 'Database':
+    #         for word in terms[area]:
+    #             if word in t:
+    #                 database += 1
+    #                 # print(word)
+    #         scores.append(database)
 
-        elif area == 'Programacion':
-            for word in terms[area]:
-                if word in t:
-                    programacion += 1
-                    # print(word)
-            scores.append(programacion)
+    #     elif area == 'Programacion':
+    #         for word in terms[area]:
+    #             if word in t:
+    #                 programacion += 1
+    #                 # print(word)
+    #         scores.append(programacion)
 
-        elif area == 'Data Science':
-            for word in terms[area]:
-                if word in t:
-                    datascience += 1
-                    # print(word)
-            scores.append(datascience)
+    #     elif area == 'Data Science':
+    #         for word in terms[area]:
+    #             if word in t:
+    #                 datascience += 1
+    #                 # print(word)
+    #         scores.append(datascience)
 
-        else:
-            if area == 'Programacion Movil':
-                for word in terms[area]:
-                    if word in t:
-                        movil += 1
-                        # print(word)
-                scores.append(movil)
+    #     else:
+    #         if area == 'Programacion Movil':
+    #             for word in terms[area]:
+    #                 if word in t:
+    #                     movil += 1
+    #                     # print(word)
+    #             scores.append(movil)
 
-    return scores
+    # return scores
 
 
 call()

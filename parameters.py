@@ -1,108 +1,342 @@
 from tkinter import *
-import numpy
-import results
+from tkinter.filedialog import askopenfile
+import pdfminer.high_level as miner
+from PIL import Image, ImageTk
+import string
+import glob
+import parameters
+import spacy
+from spacy.matcher import Matcher
+import win32api
+
+nlp = spacy.load("es_core_news_sm")
+matcher = Matcher(nlp.vocab)
+
+skills = [
+    [{"TEXT": "ingles"}],
+    [{"TEXT": "frances"}],
+    [{"TEXT": "aleman"}],
+    [{"TEXT": "orden"}],
+    [{"TEXT": "ordenes"}],
+    [{"TEXT": "logico"}],
+    [{"TEXT": "logica"}],
+    [{"TEXT": "obediente"}],
+    [{"TEXT": "liderazgo"}],
+    [{"TEXT": "lider"}],
+    [{"TEXT": "analista"}],
+    [{"TEXT": "puntual"}],
+    [{"TEXT": "creativo"}],
+    [{"TEXT": "proactivo"}],
+    [{"TEXT": "excelencia"}],
+    [{"TEXT": "creativa"}],
+    [{"TEXT": "proactiva"}],
+    [{"TEXT": "creatividad"}],
+    [{"TEXT": "proactividad"}],
+    [{"TEXT": "perfeccionista"}],
+    [{"TEXT": "perfeccion"}],
+    [{"TEXT": "aprendizaje"}],
+    [{"TEXT": "aprender"}],
+    [{"TEXT": "actitud"}],
+    [{"TEXT": "aptitud"}],
+    [{"TEXT": "eficiente"}],
+    [{"TEXT": "eficiencia"}],
+    [{"TEXT": "competencia"}],
+    [{"TEXT": "competencias"}],
+    [{"TEXT": "competente"}],
+    [{"TEXT": "eficaz"}],
+    [{"TEXT": "linux"}],
+    [{"TEXT": "mac"}],
+    [{"TEXT": "macos"}],
+    [{"TEXT": "windows"}],
+    [{"TEXT": "powershell"}],
+    [{"TEXT": "terminal"}]
+]
+
+ProgWeb = [
+    [{"TEXT": "javascript"}, ],
+    [{"TEXT": "java"}],
+    [{"TEXT": "python"}],
+    [{"TEXT": "flask"}],
+    [{"TEXT": "html"}],
+    [{"TEXT": "angular"}],
+    [{"TEXT": "angularjs"}],
+    [{"TEXT": "vue"}],
+    [{"TEXT": "vuejs"}],
+    [{"TEXT": "react"}],
+    [{"TEXT": "reactjs"}],
+    [{"TEXT": "css"}],
+    [{"TEXT": "objective c"}],
+    [{"TEXT": "perl"}],
+    [{"TEXT": "php"}],
+    [{"TEXT": "typescript"}],
+    [{"TEXT": "element"}],
+    [{"TEXT": "ruby"}],
+    [{"TEXT": "ruby"}, {"TEXT": "on"}, {"TEXT": "rails"}],
+    [{"TEXT": "yii"}],
+    [{"TEXT": "meteor"}],
+    [{"TEXT": "meteorjs"}],
+    [{"TEXT": "django"}],
+    [{"TEXT": "laravel"}],
+    [{"TEXT": "go"}],
+    [{"TEXT": "elixir"}],
+    [{"TEXT": "http"}],
+    [{"TEXT": "https"}],
+    [{"TEXT": "node"}],
+    [{"TEXT": "nodejs"}],
+    [{"TEXT": "express"}],
+    [{"TEXT": "backbonejs"}],
+    [{"TEXT": "scss"}],
+    [{"TEXT": "lcss"}]
+]
+
+BaseDeDatos = [
+    [{"TEXT": "mongo"}],
+    [{"TEXT": "database"}],
+    [{"TEXT": "base"}, {"TEXT": "de"}, {"TEXT": "datos"}],
+    [{"TEXT": "bases"}, {"TEXT": "de"}, {"TEXT": "datos"}],
+    [{"TEXT": "dbms"}],
+    [{"TEXT": "data"}, {"TEXT": "base"}],
+    [{"TEXT": "mongodb"}],
+    [{"TEXT": "postgre"}],
+    [{"TEXT": "postgresql"}],
+    [{"TEXT": "mysql"}],
+    [{"TEXT": "mariadb"}],
+    [{"TEXT": "cockroachdb"}],
+    [{"TEXT": "clickhouse"}],
+    [{"TEXT": "neo4j"}],
+    [{"TEXT": "rethinkdb"}],
+    [{"TEXT": "redis"}],
+    [{"TEXT": "sqlite"}],
+    [{"TEXT": "cassandra"}],
+    [{"TEXT": "couchdb"}],
+    [{"TEXT": "firebird"}],
+    [{"TEXT": "firebase"}],
+    [{"TEXT": "cubrid"}],
+    [{"TEXT": "sql"}]
+]
+
+ProgramacionRegular = [
+    [{"TEXT": "c++"}],
+    [{"TEXT": "c#"}],
+    [{"TEXT": "kotlin"}],
+    [{"TEXT": "go"}],
+    [{"TEXT": "golang"}],
+    [{"TEXT": "assembly"}],
+    [{"TEXT": "assembler"}],
+    [{"TEXT": "ensamblador"}],
+    [{"TEXT": "swift"}],
+    [{"TEXT": "rust"}],
+    [{"TEXT": "ruby"}],
+]
+
+DataScience = [
+    [{"TEXT": "panda"}],
+    [{"TEXT": "big"}, {"TEXT": "data"}],
+    [{"TEXT": "data"}, {"TEXT": "mining"}],
+    [{"TEXT": "clustering"}],
+    [{"TEXT": "machine"}, {"TEXT": "learning"}],
+    [{"TEXT": "data"}, {"TEXT": "science"}],
+    [{"TEXT": "deep"}, {"TEXT": "learning"}],
+    [{"TEXT": "modelado"}],
+    [{"TEXT": "modeling"}],
+    [{"TEXT": "nlp"}],
+    [{"TEXT": "pln"}],
+    [{"TEXT": "procesamiento"}, {"TEXT": "de"}, {
+        "TEXT": "lenguaje"}, {"TEXT": "natural"}],
+    [{"TEXT": "natural"}, {"TEXT": "language"}, {"TEXT": "processing"}],
+    [{"TEXT": "inteligencia"}, {"TEXT": "artificial"}],
+    [{"TEXT": "ia"}],
+    [{"TEXT": "ai"}],
+]
+
+MobileProg = [
+    [{"TEXT": "react"}, {"TEXT": "native"}],
+    [{"TEXT": "flutter"}],
+    [{"TEXT": "ionic"}],
+    [{"TEXT": "swift"}],
+    [{"TEXT": "kotlin"}],
+    [{"TEXT": "java"}]
+]
+
+matcher.add("HAB", skills)
+matcher.add("WEB", ProgWeb)
+matcher.add("BDD", BaseDeDatos)
+matcher.add("PROG", ProgramacionRegular)
+matcher.add("DATA", DataScience)
+matcher.add("MOB", MobileProg)
 
 
-def main(root, puntos):
-
-    canvas = Canvas(root, width=600, height=650)
-    canvas.grid(columnspan=3, rowspan=3)
-
-    # label
-    label = Label(
-        root, text="Selecciona el nivel de importancia de 0-5", font="Arial", pady=20)
-    label.grid(columnspan=3, column=0, row=0)
-    label.place(anchor='n', relx=0.5)
-
-    # HABILIDADES
-    # input
-    scale = Scale(root, from_=0, to=5, orient=HORIZONTAL)
-    scale.place(x=420, y=90)
-    # label
-    label = Label(root, text="Habilidades: ", font="Arial")
-    label.place(x=180, y=90)
-
-    # PROGRAMACION WEB
-    # input
-    scale1 = Scale(root, from_=0, to=5, orient=HORIZONTAL)
-    scale1.place(x=420, y=170)
-
-    # label
-    label1 = Label(root, text="Programación Web: ", font="Arial")
-    label1.place(x=180, y=170)
-
-    # BASES DE DATOS
-    # input
-    scale2 = Scale(root, from_=0, to=5, orient=HORIZONTAL)
-    scale2.place(x=420, y=250)
-
-    # label
-    label2 = Label(root, text="Bases de Datos: ", font="Arial")
-    label2.place(x=180, y=250)
-
-    # PROGRAMACION GENERAL
-    # input
-    scale3 = Scale(root, from_=0, to=5, orient=HORIZONTAL)
-    scale3.place(x=420, y=330)
-
-    # label
-    label3 = Label(root, text="Programación General: ", font="Arial")
-    label3.place(x=180, y=330)
-
-    # CIENCIAS DE DATOS
-    # input
-    scale4 = Scale(root, from_=0, to=5, orient=HORIZONTAL)
-    scale4.place(x=420, y=410)
-
-    # label
-    label4 = Label(root, text="Ciencias de Datos: ", font="Arial")
-    label4.place(x=180, y=410)
-
-    # PROGRAMACION MOVIL
-    # input
-    scale5 = Scale(root, from_=0, to=5, orient=HORIZONTAL)
-    scale5.place(x=420, y=490)
-
-    # label
-    label5 = Label(root, text="Programación Móvil: ", font="Arial")
-    label5.place(x=180, y=490)
-
-    buttonText = StringVar()
-    submit = Button(root, textvariable=buttonText, font="Raleway",
-                    bg='#20bebe', fg="white", width=15, height=1, command=lambda: submit())
-    buttonText.set("Enviar Resultados")
-
-    submit.grid(column=1, row=2)
-    submit.place(x=250, y=570)
-
-    parametros = []
-
-    def submit():
-
-        # print(scale.get())
-        parametros.append(scale.get())
-        # print(scale1.get())
-        parametros.append(scale1.get())
-        # print(scale2.get())
-        parametros.append(scale2.get())
-        # print(scale3.get())
-        parametros.append(scale3.get())
-        # print(scale4.get())
-        parametros.append(scale4.get())
-        # print(scale5.get())
-        parametros.append(scale5.get())
-        # print(parametros)
-        resultadosfacheritos = numpy.multiply(puntos, parametros)
-        print(resultadosfacheritos)
-        finalCall(root, resultadosfacheritos)
+def espeici(contento):
+    matchesitos = []
+    # print(contento)
+    doc = nlp(contento)
+    # print(doc)
+    matches = matcher(doc)
+    for match_id, start, end in matches:
+        string_id = nlp.vocab.strings[match_id]  # Get string representation
+        span = doc[start:end]  # The matched span
+        print(string_id, span.text)
+        matchesitos.append(span.text)
+    # print(matchesitos)
 
 
-def finalCall(root, resultadosfacheritos):
-    root.destroy()
-    results.callResultPage(resultadosfacheritos)
-
-
-def callParametersPage(puntos):
+def call():
     root = Tk()
-    main(root, puntos)
+    main(root)
     root.mainloop()
+
+
+content = ''
+
+terms = {'Habilidades Generales': ['ingles', 'frances', 'aleman', 'orden', 'ordenes', 'logico', 'logica', 'obediente', 'liderazgo', 'lider', 'analitic', 'puntual', 'responsable', 'cooperativo', 'cooperacion', 'creativ', 'creatividad', 'proactiv', 'proactividad', 'excelencia', 'perfeccionista', 'perfeccion', 'aprendizaje', 'aprender', 'actitud', 'aptitud', 'eficiente', 'eficiencia', 'competencia', 'competencias', 'competente', 'eficaz', 'linux', 'mac ', 'macos', 'windows', 'powershell', 'terminal'],
+         'Programacion Web': ['javascript', 'java', 'python', 'flask', 'html', 'angular', 'angularjs', 'vue ', 'vuejs', 'react', 'reactjs', 'css', 'objective c', 'perl', 'php', 'typescript', 'element', 'ruby', 'ruby on rails', 'yii', 'meteor', 'meteorjs', 'django', 'laravel', ' go ', 'elixir', 'http', 'https''node', 'nodejs', 'express', 'backbonejs', 'scss', 'lcss'],
+         'Database': ['mongo', 'database', 'base de datos', 'DBMS', 'data base' 'mongodb', 'postgre', 'postgresql', 'mysql', 'mariadb', 'cockroachdb', 'clickhouse', 'neo4j', 'rethinkdb', 'redis', 'sqlite', 'cassandra', 'couchdb', 'firebird', 'firebase', 'cubrid', 'sql'],
+         'Programacion': ['c++', 'c ', 'c#', 'python', 'java', 'kotlin', ' go ', 'golang', 'assembly', 'assembler', 'ensamblador', 'swift', 'rust', 'ruby'],
+         'Data Science': ['panda', 'big data', 'data mining', 'clustering', 'machine learning', 'data science', 'deep learning', 'modelado', 'modeling', 'nlp', 'pln', 'inteligencia artificial', ' ia ', ' ai '],
+         'Programacion Movil': ['react native', 'flutter', 'ionic', 'swift', 'kotlin', 'java']
+         }
+
+
+def main(root):
+
+    canvas = Canvas(root, width=600, height=600)
+    canvas.grid(columnspan=4, rowspan=4)
+
+    # logo
+    for filename in glob.glob('resources/logo.png'):
+        logo = Image.open(filename)
+        logo = ImageTk.PhotoImage(logo)
+        logo_label = Label(image=logo)
+        logo_label.image = logo
+        logo_label.grid(column=1, row=0)
+
+    # instructions
+    instructions = Label(
+        root, text="Selecciona una Descripción de Trabajo", font="Raleway")
+    instructions.grid(columnspan=3, column=0, row=1)
+
+    # boton para browsear
+    buttonText = StringVar()
+    button = Button(root, textvariable=buttonText, command=lambda: open_pdf(buttonText, root), font="Raleway",
+                    bg='#20bebe', fg="white", width=20, height=2)
+    buttonText.set("Navega por un/unos CV")
+    button.grid(column=1, row=2)
+
+    canvas = Canvas(root, width=600, height=250)
+    canvas.grid(columnspan=3)
+
+
+def nextPage(root, puntos):
+    root.destroy()
+    parameters.callParametersPage(puntos)
+
+# funcion del boton
+
+
+def open_pdf(buttonText, root):
+    buttonText.set("Cargando...")
+    file = askopenfile(parent=root, mode='rb', title="Elige varios CV", filetypes=[
+        ("Pdf file", "*.pdf")])
+
+    if file:
+
+        content = miner.extract_text(file)
+        # caja de texto
+        content = content.lower()
+        content = content.translate(
+            str.maketrans('', '', string.punctuation))
+        content = normalize(content)
+        # print(terms.keys())
+        text = content
+        espeici(content)
+        puntos = puntuacion(text)
+        print(puntos)
+
+        win32api.MessageBox(0, 'Descripción de Trabajo Cargada Exitosamente',
+                            'Éxito', 0x00001000, )
+
+        buttonText.set("Navega por un PDF")
+
+        # boton nextPage
+        nextText = StringVar()
+        next = Button(root, textvariable=nextText,
+                      command=lambda: nextPage(root, puntos), font='Raleway', bg='#20bebe', fg="white", width=15, height=2)
+        nextText.set('Siguiente')
+        next.place(x=230, y=600)
+
+        return
+
+
+def normalize(s):
+    replacements = (
+        ("á", "a"),
+        ("é", "e"),
+        ("í", "i"),
+        ("ó", "o"),
+        ("ú", "u"),
+    )
+    for a, b in replacements:
+        s = s.replace(a, b).replace(a.upper(), b.upper())
+    return s
+
+
+def puntuacion(t):
+
+    habilidades = 0
+    web = 0
+    database = 0
+    programacion = 0
+    datascience = 0
+    movil = 0
+
+    scores = []
+    # print(t)
+    for area in terms.keys():
+
+        if area == 'Habilidades Generales':
+            for word in terms[area]:
+                if word in t:
+                    habilidades += 1
+                    # print(word)
+            scores.append(habilidades)
+
+        elif area == 'Programacion Web':
+            for word in terms[area]:
+                if word in t:
+                    web += 1
+                    # print(word)
+            scores.append(web)
+
+        elif area == 'Database':
+            for word in terms[area]:
+                if word in t:
+                    database += 1
+                    # print(word)
+            scores.append(database)
+
+        elif area == 'Programacion':
+            for word in terms[area]:
+                if word in t:
+                    programacion += 1
+                    # print(word)
+            scores.append(programacion)
+
+        elif area == 'Data Science':
+            for word in terms[area]:
+                if word in t:
+                    datascience += 1
+                    # print(word)
+            scores.append(datascience)
+
+        else:
+            if area == 'Programacion Movil':
+                for word in terms[area]:
+                    if word in t:
+                        movil += 1
+                        # print(word)
+                scores.append(movil)
+
+    return scores
+
+
+call()
