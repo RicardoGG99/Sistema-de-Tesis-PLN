@@ -2,20 +2,16 @@ from tkinter import *
 import tkinter as tk
 
 
-def callResultPage(resultadosfacheritos):
+def callResultsPage(allScores, jobScores):
     root = tk.Tk()
-    main(root, resultadosfacheritos)
+    main(root, allScores, jobScores)
     root.mainloop()
 
 
-def main(root, resultadosfacheritos):
+def main(root, allScores, jobScores):
 
-    resultadosreales = []
-
-    for i in resultadosfacheritos:
-        print(i)
-        resultadosreales.append(str(i))
-        print(resultadosreales)
+    print("all: ", allScores)
+    print("job: ", jobScores)
 
     canvas = Canvas(root, width=600, height=300)
     canvas.grid(columnspan=3, rowspan=3)
@@ -29,64 +25,24 @@ def main(root, resultadosfacheritos):
     label.grid(columnspan=3, column=0, row=0)
     label.place(anchor='n', relx=0.5)
 
-    # HABILIDADES
-    # input
-    labelHabilidades = Label(
-        root, text=resultadosreales[0] + " punto(s) ", font="Arial")
-    labelHabilidades.place(x=420, y=90)
-    # label
-    label = Label(root, text="Habilidades: ", font="Arial")
-    label.place(x=180, y=90)
+    newJobScore = []
 
-    # PROGRAMACION WEB
-    # input
-    labelWeb = Label(
-        root, text=resultadosreales[1] + " punto(s) ", font="Arial")
-    labelWeb.place(x=420, y=170)
+    for scoreporfabor in jobScores:
+        newJobScore.append(scoreporfabor)
 
-    # label
-    label1 = Label(root, text="Programación Web: ", font="Arial")
-    label1.place(x=180, y=170)
-
-    # BASES DE DATOS
-    # input
-    labelBDD = Label(
-        root, text=resultadosreales[2] + " punto(s) ", font="Arial")
-    labelBDD.place(x=420, y=250)
-
-    # label
-    label2 = Label(root, text="Bases de Datos: ", font="Arial")
-    label2.place(x=180, y=250)
-
-    # PROGRAMACION GENERAL
-    # input
-    labelGeneral = Label(
-        root, text=resultadosreales[3] + " punto(s) ", font="Arial")
-    labelGeneral.place(x=420, y=330)
-
-    # label
-    label3 = Label(root, text="Programación General: ", font="Arial")
-    label3.place(x=180, y=330)
-
-    # CIENCIAS DE DATOS
-    # input
-    labelScience = Label(
-        root, text=resultadosreales[4] + " punto(s) ", font="Arial")
-    labelScience.place(x=420, y=410)
-
-    # label
-    label4 = Label(root, text="Ciencias de Datos: ", font="Arial")
-    label4.place(x=180, y=410)
-
-    # PROGRAMACION MOVIL
-    # input
-    labelMovil = Label(
-        root, text=resultadosreales[5] + " punto(s) ", font="Arial")
-    labelMovil.place(x=420, y=490)
-
-    # label
-    label5 = Label(root, text="Programación Móvil: ", font="Arial")
-    label5.place(x=180, y=490)
-
-
-# callResultPage(['1', '2', '3', '4', '5', '6'])
+    for scorex in allScores:
+        i = 0
+        for scoreVerga in jobScores:
+            #print("esta es la iteracion numero: ", i)
+            # print(jobScores[i])
+            if jobScores[i] == 0:
+                scorex[i] = 0
+                newJobScore[i] = 1
+            i += 1
+        print(scorex)
+    print(jobScores)
+    print(newJobScore)
+    for scorex in allScores:
+        arraysUnidos = zip(scorex, newJobScore)
+        result = [(x/y)*100 for x, y in arraysUnidos]
+        print(result)

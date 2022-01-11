@@ -1,17 +1,17 @@
 from tkinter import *
-from tkinter.filedialog import askopenfiles
+from tkinter.filedialog import askopenfile
 import pdfminer.high_level as miner
 from PIL import Image, ImageTk
 import string
 import glob
-import job
 import spacy
 from spacy.matcher import Matcher
 import win32api
+import results
 
 # Patterns
 
-Skills = [
+skills = [
     [{"TEXT": "ingles"}],
     [{"TEXT": "frances"}],
     [{"TEXT": "aleman"}],
@@ -162,7 +162,7 @@ MobileProg = [
 nlp = spacy.load("es_core_news_sm")
 matcher = Matcher(nlp.vocab)
 
-matcher.add("HAB", Skills)
+matcher.add("HAB", skills)
 matcher.add("WEB", ProgWeb)
 matcher.add("BDD", BaseDeDatos)
 matcher.add("PROG", ProgramacionRegular)
@@ -184,7 +184,7 @@ def spacy(content):
     datascience = 0
     movil = 0
 
-    scores = []
+    jobScores = []
     for match_id, start, end in matches:
         string_id = nlp.vocab.strings[match_id]
         span = doc[start:end]
@@ -209,24 +209,33 @@ def spacy(content):
             if string_id == 'MOB':
                 movil += 1
 
-    scores.append(habilidades)
-    scores.append(web)
-    scores.append(database)
-    scores.append(programacion)
-    scores.append(datascience)
-    scores.append(movil)
-    print(scores)
+    jobScores.append(habilidades)
+    jobScores.append(web)
+    jobScores.append(database)
+    jobScores.append(programacion)
+    jobScores.append(datascience)
+    jobScores.append(movil)
+    print(jobScores)
 
-    return scores
+    return jobScores
+
+# Invoca la interfaz.
 
 
-def call():
+def callJob(allScores):
     root = Tk()
-    main(root)
+    main(root, allScores)
     root.mainloop()
 
 
-def main(root):
+def resultsPage(root, allScores, jobScores):
+    root.destroy()
+    results.callResultsPage(allScores, jobScores)
+
+
+# Interfaz de la pagina
+
+def main(root, allScores):
 
     canvas = Canvas(root, width=600, height=600)
     canvas.grid(columnspan=4, rowspan=4)
@@ -239,59 +248,53 @@ def main(root):
         logo_label.image = logo
         logo_label.grid(column=1, row=0)
 
-    # instructions
+    # instrucciones
     instructions = Label(
-        root, text="Selecciona un Currículo de vida desde tu PC", font="Raleway")
+        root, text="Selecciona una Descripción de Trabajo", font="Raleway")
     instructions.grid(columnspan=3, column=0, row=1)
 
     # boton para browsear
     buttonText = StringVar()
-    button = Button(root, textvariable=buttonText, command=lambda: open_pdf(buttonText, root), font="Raleway",
-                    bg='#20bebe', fg="white", width=20, height=2)
-    buttonText.set("Navega por un/unos CV")
+    button = Button(root, textvariable=buttonText, command=lambda: open_pdf(buttonText, root, allScores), font="Raleway",
+                    bg='#20bebe', fg="white", width=40, height=2)
+    buttonText.set("Navega por una Descripción de Trabajo")
     button.grid(column=1, row=2)
 
     canvas = Canvas(root, width=600, height=250)
     canvas.grid(columnspan=3)
 
 
-# funcion del boton
+# Funcion para abrir y leer el PDF, Procesamiento principal, llamada a funciones.
 
-
-def open_pdf(buttonText, root):
+def open_pdf(buttonText, root, allScores):
     buttonText.set("Cargando...")
-    files = askopenfiles(parent=root, mode='rb', title="Elige varios CV", filetypes=[
+    file = askopenfile(parent=root, mode='rb', title="Elige una Descripción de Trabajo", filetypes=[
         ("Pdf file", "*.pdf")])
 
-    if files:
-        allScores = []
-        for file in files:
+    if file:
 
-            content = miner.extract_text(file)
-            content = content.lower()
-            content = content.translate(
-                str.maketrans('', '', string.punctuation))
-            content = normalize(content)
-            allScores.append(spacy(content))
-            print("Fin PDF")
-        win32api.MessageBox(0, 'CV Cargado(s) Exitosamente',
+        content = miner.extract_text(file)
+        # caja de texto
+        content = content.lower()
+        content = content.translate(
+            str.maketrans('', '', string.punctuation))
+        content = normalize(content)
+        # print(terms.keys())
+        JobScores = spacy(content)
+
+        win32api.MessageBox(0, 'Descripción de Trabajo Cargada Exitosamente',
                             'Éxito', 0x00001000, )
 
-        buttonText.set("Navega por un PDF")
-    print(allScores)
-    # boton jobPage
-    nextText = StringVar()
-    next = Button(root, textvariable=nextText,
-                  command=lambda: jobPage(root, allScores), font='Raleway', bg='#20bebe', fg="white", width=15, height=2)
-    nextText.set('Siguiente')
-    next.place(x=230, y=600)
+        # boton resultsPage
+        nextText = StringVar()
+        next = Button(root, textvariable=nextText,
+                      command=lambda: resultsPage(root, allScores, JobScores), font='Raleway', bg='#20bebe', fg="white", width=15, height=2)
+        nextText.set('Siguiente')
+        next.place(x=230, y=600)
 
-    # return allScores
+        return
 
-
-def jobPage(root, allScores):
-    root.destroy()
-    job.callJob(allScores)
+# Remplaza las letras con acentos.
 
 
 def normalize(s):
@@ -305,65 +308,3 @@ def normalize(s):
     for a, b in replacements:
         s = s.replace(a, b).replace(a.upper(), b.upper())
     return s
-
-
-# def puntuacion(t):
-
-    # habilidades = 0
-    # web = 0
-    # database = 0
-    # programacion = 0
-    # datascience = 0
-    # movil = 0
-
-    # scores = []
-    # # print(t)
-    #
-
-    #     if area == 'Habilidades Generales':
-    #         for word in terms[area]:
-    #             if word in t:
-    #                 habilidades += 1
-    #                 # print(word)
-    #         scores.append(habilidades)
-
-    #     elif area == 'Programacion Web':
-    #         for word in terms[area]:
-    #             if word in t:
-    #                 web += 1
-    #                 # print(word)
-    #         scores.append(web)
-
-    #     elif area == 'Database':
-    #         for word in terms[area]:
-    #             if word in t:
-    #                 database += 1
-    #                 # print(word)
-    #         scores.append(database)
-
-    #     elif area == 'Programacion':
-    #         for word in terms[area]:
-    #             if word in t:
-    #                 programacion += 1
-    #                 # print(word)
-    #         scores.append(programacion)
-
-    #     elif area == 'Data Science':
-    #         for word in terms[area]:
-    #             if word in t:
-    #                 datascience += 1
-    #                 # print(word)
-    #         scores.append(datascience)
-
-    #     else:
-    #         if area == 'Programacion Movil':
-    #             for word in terms[area]:
-    #                 if word in t:
-    #                     movil += 1
-    #                     # print(word)
-    #             scores.append(movil)
-
-    # return scores
-
-
-call()
