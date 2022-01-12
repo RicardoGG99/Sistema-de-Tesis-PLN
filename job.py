@@ -285,6 +285,8 @@ def open_pdf(buttonText, root, allScores):
         win32api.MessageBox(0, 'Descripción de Trabajo Cargada Exitosamente',
                             'Éxito', 0x00001000, )
 
+        buttonText.set("Elige una Descripción de Trabajo")
+
         # boton resultsPage
         nextText = StringVar()
         next = Button(root, textvariable=nextText,

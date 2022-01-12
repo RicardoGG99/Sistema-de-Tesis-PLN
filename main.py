@@ -277,7 +277,7 @@ def open_pdf(buttonText, root):
         win32api.MessageBox(0, 'CV Cargado(s) Exitosamente',
                             'Éxito', 0x00001000, )
 
-        buttonText.set("Navega por un PDF")
+        buttonText.set("Navega por un/unos CV")
     print(allScores)
     # boton jobPage
     nextText = StringVar()
