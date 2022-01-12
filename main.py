@@ -188,7 +188,7 @@ def spacy(content):
     for match_id, start, end in matches:
         string_id = nlp.vocab.strings[match_id]
         span = doc[start:end]
-        print(string_id, span.text)
+        #print(string_id, span.text)
 
         if string_id == 'HAB':
             habilidades += 1
@@ -215,7 +215,7 @@ def spacy(content):
     scores.append(programacion)
     scores.append(datascience)
     scores.append(movil)
-    print(scores)
+    # print(scores)
 
     return scores
 
@@ -232,7 +232,7 @@ def main(root):
     canvas.grid(columnspan=4, rowspan=4)
 
     # logo
-    for filename in glob.glob('resources/logo.png'):
+    for filename in glob.glob('resources/logoo.png'):
         logo = Image.open(filename)
         logo = ImageTk.PhotoImage(logo)
         logo_label = Label(image=logo)
@@ -273,20 +273,19 @@ def open_pdf(buttonText, root):
                 str.maketrans('', '', string.punctuation))
             content = normalize(content)
             allScores.append(spacy(content))
-            print("Fin PDF")
+            #print("Fin PDF")
         win32api.MessageBox(0, 'CV Cargado(s) Exitosamente',
                             'Éxito', 0x00001000, )
 
         buttonText.set("Navega por un/unos CV")
-    print(allScores)
+    # print(allScores)
+
     # boton jobPage
     nextText = StringVar()
     next = Button(root, textvariable=nextText,
                   command=lambda: jobPage(root, allScores), font='Raleway', bg='#20bebe', fg="white", width=15, height=2)
     nextText.set('Siguiente')
     next.place(x=230, y=600)
-
-    # return allScores
 
 
 def jobPage(root, allScores):
@@ -305,65 +304,6 @@ def normalize(s):
     for a, b in replacements:
         s = s.replace(a, b).replace(a.upper(), b.upper())
     return s
-
-
-# def puntuacion(t):
-
-    # habilidades = 0
-    # web = 0
-    # database = 0
-    # programacion = 0
-    # datascience = 0
-    # movil = 0
-
-    # scores = []
-    # # print(t)
-    #
-
-    #     if area == 'Habilidades Generales':
-    #         for word in terms[area]:
-    #             if word in t:
-    #                 habilidades += 1
-    #                 # print(word)
-    #         scores.append(habilidades)
-
-    #     elif area == 'Programacion Web':
-    #         for word in terms[area]:
-    #             if word in t:
-    #                 web += 1
-    #                 # print(word)
-    #         scores.append(web)
-
-    #     elif area == 'Database':
-    #         for word in terms[area]:
-    #             if word in t:
-    #                 database += 1
-    #                 # print(word)
-    #         scores.append(database)
-
-    #     elif area == 'Programacion':
-    #         for word in terms[area]:
-    #             if word in t:
-    #                 programacion += 1
-    #                 # print(word)
-    #         scores.append(programacion)
-
-    #     elif area == 'Data Science':
-    #         for word in terms[area]:
-    #             if word in t:
-    #                 datascience += 1
-    #                 # print(word)
-    #         scores.append(datascience)
-
-    #     else:
-    #         if area == 'Programacion Movil':
-    #             for word in terms[area]:
-    #                 if word in t:
-    #                     movil += 1
-    #                     # print(word)
-    #             scores.append(movil)
-
-    # return scores
 
 
 call()

@@ -5,18 +5,17 @@ import tkinter as tk
 
 
 def callResultsPage(allScores, jobScores):
-    root = tk.Tk()
-    main(root, allScores, jobScores)
-    root.mainloop()
+
+    main(allScores, jobScores)
 
 
 scoresPorcentaje = []
 
 
-def main(root, allScores, jobScores):
+def main(allScores, jobScores):
 
-    print("all: ", allScores)
-    print("job: ", jobScores)
+    #print("all: ", allScores)
+    #print("job: ", jobScores)
 
     newJobScore = []
 
@@ -30,23 +29,21 @@ def main(root, allScores, jobScores):
                 scorex[i] = 0
                 newJobScore[i] = 1
             i += 1
-        print(scorex)
-    print(jobScores)
-    print(newJobScore)
+        # print(scorex)
+    # print(jobScores)
+    # print(newJobScore)
     for scorex in allScores:
         arraysUnidos = zip(scorex, newJobScore)
         result = [(x/y)*100 for x, y in arraysUnidos]
-        print(result)
+        # print(result)
+        z = 0
+        for valor in result:
+            if valor > 100:
+                result[z] = 100
+            z += 1
         scoresPorcentaje.append(result)
 
-    elmejor = zip(allScores)
-    result = [()]
     print(scoresPorcentaje)
-
-    # lo que estaba en huevo
-    root.geometry("500x500")
-
-    z = 0
 
     def graph(values):
         labels = ['Hab', 'Web', 'BDD',
@@ -75,6 +72,4 @@ def main(root, allScores, jobScores):
         plt.show()
 
     for score in scoresPorcentaje:
-        # button = Button(root, text="Abrir Grafico", command=graphAux)
-        # button.pack()
         graph(score)

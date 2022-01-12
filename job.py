@@ -188,7 +188,7 @@ def spacy(content):
     for match_id, start, end in matches:
         string_id = nlp.vocab.strings[match_id]
         span = doc[start:end]
-        print(string_id, span.text)
+        #print(string_id, span.text)
 
         if string_id == 'HAB':
             habilidades += 1
@@ -215,7 +215,7 @@ def spacy(content):
     jobScores.append(programacion)
     jobScores.append(datascience)
     jobScores.append(movil)
-    print(jobScores)
+    # print(jobScores)
 
     return jobScores
 
