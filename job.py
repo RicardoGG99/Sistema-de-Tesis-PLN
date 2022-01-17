@@ -115,6 +115,7 @@ BaseDeDatos = [
 ]
 
 ProgramacionRegular = [
+    [{"TEXT": "java"}],
     [{"TEXT": "c++"}],
     [{"TEXT": "c#"}],
     [{"TEXT": "kotlin"}],
@@ -257,7 +258,7 @@ def main(root, allScores):
     buttonText = StringVar()
     button = Button(root, textvariable=buttonText, command=lambda: open_pdf(buttonText, root, allScores), font="Raleway",
                     bg='#20bebe', fg="white", width=40, height=2)
-    buttonText.set("Navega por una Descripción de Trabajo")
+    buttonText.set("Navega por tus archivos")
     button.grid(column=1, row=2)
 
     canvas = Canvas(root, width=600, height=250)

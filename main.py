@@ -115,6 +115,7 @@ BaseDeDatos = [
 ]
 
 ProgramacionRegular = [
+    [{"TEXT": "java"}],
     [{"TEXT": "c++"}],
     [{"TEXT": "c#"}],
     [{"TEXT": "kotlin"}],
@@ -215,7 +216,6 @@ def spacy(content):
     scores.append(programacion)
     scores.append(datascience)
     scores.append(movil)
-    # print(scores)
 
     return scores
 
@@ -232,7 +232,7 @@ def main(root):
     canvas.grid(columnspan=4, rowspan=4)
 
     # logo
-    for filename in glob.glob('resources/logoo.png'):
+    for filename in glob.glob('resources/logo.png'):
         logo = Image.open(filename)
         logo = ImageTk.PhotoImage(logo)
         logo_label = Label(image=logo)
@@ -248,7 +248,7 @@ def main(root):
     buttonText = StringVar()
     button = Button(root, textvariable=buttonText, command=lambda: open_pdf(buttonText, root), font="Raleway",
                     bg='#20bebe', fg="white", width=20, height=2)
-    buttonText.set("Navega por un/unos CV")
+    buttonText.set("Navega por tus archivos")
     button.grid(column=1, row=2)
 
     canvas = Canvas(root, width=600, height=250)
@@ -272,13 +272,13 @@ def open_pdf(buttonText, root):
             content = content.translate(
                 str.maketrans('', '', string.punctuation))
             content = normalize(content)
+
             allScores.append(spacy(content))
-            #print("Fin PDF")
         win32api.MessageBox(0, 'CV Cargado(s) Exitosamente',
                             'Éxito', 0x00001000, )
 
         buttonText.set("Navega por un/unos CV")
-    # print(allScores)
+        print(content)
 
     # boton jobPage
     nextText = StringVar()

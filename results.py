@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from tkinter import *
-import tkinter as tk
 
 
 def callResultsPage(allScores, jobScores):
@@ -14,13 +13,10 @@ scoresPorcentaje = []
 
 def main(allScores, jobScores):
 
-    #print("all: ", allScores)
-    #print("job: ", jobScores)
-
     newJobScore = []
 
-    for scoreporfabor in jobScores:
-        newJobScore.append(scoreporfabor)
+    for jobScoresX in jobScores:
+        newJobScore.append(jobScoresX)
 
     for scorex in allScores:
         i = 0
@@ -29,13 +25,9 @@ def main(allScores, jobScores):
                 scorex[i] = 0
                 newJobScore[i] = 1
             i += 1
-        # print(scorex)
-    # print(jobScores)
-    # print(newJobScore)
     for scorex in allScores:
         arraysUnidos = zip(scorex, newJobScore)
         result = [(x/y)*100 for x, y in arraysUnidos]
-        # print(result)
         z = 0
         for valor in result:
             if valor > 100:
@@ -57,11 +49,10 @@ def main(allScores, jobScores):
         fig, ax = plt.subplots()
         rects1 = ax.bar(x - width/2, values, width, label='CV')
 
-        # Add some text for labels, title and custom x-axis tick labels, etc.
         ax.set_ylabel('% de Afinidad')
         ax.set_title('Afinidad de Postulante por Categoria')
         ax.set_xticks(x, labels)
-        ax.set_xlabel('Categorias')
+        ax.set_xlabel('Categorías')
         ax.legend()
 
         ax.bar_label(rects1, padding=3)
