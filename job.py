@@ -223,20 +223,20 @@ def spacy(content):
 # Invoca la interfaz.
 
 
-def callJob(allScores):
+def callJob(allScores, filenames):
     root = Tk()
-    main(root, allScores)
+    main(root, allScores, filenames)
     root.mainloop()
 
 
-def resultsPage(root, allScores, jobScores):
+def resultsPage(root, allScores, jobScores, filenames):
     root.destroy()
-    results.callResultsPage(allScores, jobScores)
+    results.callResultsPage(allScores, jobScores, filenames)
 
 
 # Interfaz de la pagina
 
-def main(root, allScores):
+def main(root, allScores, filenames):
 
     canvas = Canvas(root, width=600, height=600)
     canvas.grid(columnspan=4, rowspan=4)
@@ -256,7 +256,7 @@ def main(root, allScores):
 
     # boton para browsear
     buttonText = StringVar()
-    button = Button(root, textvariable=buttonText, command=lambda: open_pdf(buttonText, root, allScores), font="Raleway",
+    button = Button(root, textvariable=buttonText, command=lambda: open_pdf(buttonText, root, allScores, filenames), font="Raleway",
                     bg='#20bebe', fg="white", width=40, height=2)
     buttonText.set("Navega por tus archivos")
     button.grid(column=1, row=2)
@@ -267,7 +267,7 @@ def main(root, allScores):
 
 # Funcion para abrir y leer el PDF, Procesamiento principal, llamada a funciones.
 
-def open_pdf(buttonText, root, allScores):
+def open_pdf(buttonText, root, allScores, filenames):
     buttonText.set("Cargando...")
     file = askopenfile(parent=root, mode='rb', title="Elige una Descripción de Trabajo", filetypes=[
         ("Pdf file", "*.pdf")])
@@ -291,7 +291,7 @@ def open_pdf(buttonText, root, allScores):
         # boton resultsPage
         nextText = StringVar()
         next = Button(root, textvariable=nextText,
-                      command=lambda: resultsPage(root, allScores, JobScores), font='Raleway', bg='#20bebe', fg="white", width=15, height=2)
+                      command=lambda: resultsPage(root, allScores, JobScores, filenames), font='Raleway', bg='#20bebe', fg="white", width=15, height=2)
         nextText.set('Siguiente')
         next.place(x=230, y=600)
 

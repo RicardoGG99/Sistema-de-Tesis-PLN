@@ -9,6 +9,9 @@ import spacy
 from spacy.matcher import Matcher
 import win32api
 
+from pdfminer.pdfparser import PDFParser as parserPDF
+from pdfminer.pdfdocument import PDFDocument as documentPDF
+
 # Patterns
 
 Skills = [
@@ -265,9 +268,23 @@ def open_pdf(buttonText, root):
 
     if files:
         allScores = []
+        filenames = []
         for file in files:
 
             content = miner.extract_text(file)
+
+            # Encontrar el filename
+            parser = parserPDF(file)
+            doc = documentPDF(parser)
+            metadata = doc.info
+            metadata = metadata[0]
+
+            for x in metadata:
+                if x == "Title":
+                    filenamee = metadata[x]
+                    filenames.append(filenamee)
+                    print(filenames)
+
             content = content.lower()
             content = content.translate(
                 str.maketrans('', '', string.punctuation))
@@ -278,19 +295,19 @@ def open_pdf(buttonText, root):
                             'Éxito', 0x00001000, )
 
         buttonText.set("Navega por un/unos CV")
-        print(content)
+        # print(content)
 
     # boton jobPage
     nextText = StringVar()
     next = Button(root, textvariable=nextText,
-                  command=lambda: jobPage(root, allScores), font='Raleway', bg='#20bebe', fg="white", width=15, height=2)
+                  command=lambda: jobPage(root, allScores, filenames), font='Raleway', bg='#20bebe', fg="white", width=15, height=2)
     nextText.set('Siguiente')
     next.place(x=230, y=600)
 
 
-def jobPage(root, allScores):
+def jobPage(root, allScores, filenames):
     root.destroy()
-    job.callJob(allScores)
+    job.callJob(allScores, filenames)
 
 
 def normalize(s):

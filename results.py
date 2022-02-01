@@ -3,16 +3,16 @@ import numpy as np
 from tkinter import *
 
 
-def callResultsPage(allScores, jobScores):
+def callResultsPage(allScores, jobScores, filenames):
 
-    main(allScores, jobScores)
+    main(allScores, jobScores, filenames)
 
 
 scoresPorcentaje = []
 
 
-def main(allScores, jobScores):
-
+def main(allScores, jobScores, filenames):
+    m = 0
     newJobScore = []
 
     for jobScoresX in jobScores:
@@ -36,23 +36,24 @@ def main(allScores, jobScores):
         scoresPorcentaje.append(result)
 
     print(scoresPorcentaje)
+    m = 0
 
-    def graph(values):
+    def graph(values, i):
         labels = ['Hab', 'Web', 'BDD',
                   'Prog', 'Ciencia DD', 'Movil', 'MAX']
-
+        nombre = filenames[i]
         values.append(100)
 
         x = np.arange(len(labels))
         width = 0.35
 
         fig, ax = plt.subplots()
-        rects1 = ax.bar(x - width/2, values, width, label='CV')
+        rects1 = ax.bar(x - width/2, values, width, label=nombre)
 
         ax.set_ylabel('% de Afinidad')
         ax.set_title('Afinidad de Postulante por Categoria')
         ax.set_xticks(x, labels)
-        ax.set_xlabel('Categorías')
+        ax.set_xlabel('Descripcion')
         ax.legend()
 
         ax.bar_label(rects1, padding=3)
@@ -63,4 +64,5 @@ def main(allScores, jobScores):
         plt.show()
 
     for score in scoresPorcentaje:
-        graph(score)
+        graph(score, m)
+        m += 1
